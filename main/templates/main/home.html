@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>yt-dlp frontend</title>
+    <title>ytdl.lol | yt-dlp frontend</title>
     <style>
         body {
             margin: 0 auto;
@@ -13,7 +13,7 @@
             font-size: 14px;
             font-family:Verdana, Geneva, Tahoma, sans-serif;
             text-align: center;
-            width: 700px;
+            max-width: 700px;
         }
 
         details pre {
@@ -35,10 +35,10 @@
 
         button {
             padding: 8px 12px;
-            background-color: #e8eb3e; /* blue */
+            background-color: #e8eb3e;
             color: #141414;
             border: none;
-            border-radius: 0; /* keeps it rectangular */
+            border-radius: 0;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
@@ -72,15 +72,15 @@
 </head>
 <body {% if theme == 'darkopt' %} class="dark" {% endif %}>
     <header>
-        <h1>ytdl.lol: (Youtube) Media Downloader</h1>
-        <small>powered with the latest yt-dlp</small>
+        <h1>ytdl.lol: Web Media Downloader</h1>
+        <small>just a yt-dlp frontend</small>
         <br><br>
 
         <p class="message_sv">{{ message }}</p>
 
         <form method="POST" action="{% url 'get_info' %}">
             {% csrf_token %}
-            url: <input type="text" width="90%" name="yt_link" id="yt_link">
+            URL: <input type="text" width="90%" name="yt_link" id="yt_link">
             <button type="button" onclick="pasteFromClipboard()">paste 📝</button>
             <script>
                 async function pasteFromClipboard() {
@@ -178,18 +178,6 @@
 
     
     <footer>
-        <hr>
-        <details>
-            <summary>details</summary>
-            <div class="updiv">
-                <p class="updates">2025-12-12: website online, download only by url</p>
-                <p class="updates">2025-12-15: url input box for download, download buttons, get options to download from url</p>
-                <p class="updates">2025-12-17: dark mode, updates</p>
-                <p class="updates">2025-12-23: MORE updates</p>
-            </div>
-            <p>yt-dlp version: {{ytdlpver}}</p>
-        </details>
-
         <p>by <a href="/">zuirx</a> | <a href="https://github.com/zuirx/ytdldotlol">host your own</a></p>
     </footer>
 </body>
