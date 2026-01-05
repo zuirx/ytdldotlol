@@ -1,184 +1,348 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Download YouTube Videos Easily.">
+    <meta name="keywords" content="youtube, download, free, mp4, mp3">
+    <meta name="robots" content="index, follow">
+    <link rel="shortcut icon" href="{% static 'ytdl/favicon.ico' %}" type="image/x-icon">
+
     <title>ytdl.lol | yt-dlp frontend</title>
+
     <style>
+        :root {
+            --bg-body: #0f1115;
+            --bg-card: #1a1d23;
+            --bg-input: #0a0c0f;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #facc15;
+            --accent-hover: #eab308;
+            --border: #2d333b;
+            --danger: #ff5f5f;
+            --font-stack: system-ui, -apple-system, "Segoe UI", Roboto, "Bitstream Vera Sans", "DejaVu Sans", sans-serif;
+        }
+
         body {
-            margin: 0 auto;
-            color: black;
-            padding: 50px;
-            background-color: white;
-            font-size: 14px;
-            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        header {
             text-align: center;
-            max-width: 700px;
+            margin: 40px 0;
         }
 
-        details pre {
-            text-align: left;
+        h1 {
+            font-size: 2.2rem;
+            margin: 0;
+            letter-spacing: -1px;
+            color: #fff;
         }
 
-        .dark {
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+        
+        .subtitle a {
             color: white;
-            background-color: black;
+            text-decoration: none;
         }
 
-        details {
-            cursor: pointer;
+        .main-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .message_sv {
-            color: rgb(248, 90, 90);
+            color: var(--danger);
+            background: rgba(255, 95, 95, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+        }
+
+        .actions-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
         }
 
         button {
-            padding: 8px 12px;
-            background-color: #e8eb3e;
-            color: #141414;
-            border: none;
-            border-radius: 0;
-            font-size: 12px;
-            font-weight: 500;
+            font-family: var(--font-stack);
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-            margin: 5px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        button:hover {
-            background-color: #b4c048;
+        /* SVG Icon styling */
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
         }
 
-        button:active {
-            transform: scale(0.98);
+        .btn-primary {
+            background-color: var(--accent);
+            color: #000;
         }
 
-        button:disabled {
-            background-color: #9ca3af;
-            cursor: not-allowed;
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
         }
 
-        .example_usage {
-            font-family: Tahoma, sans-serif;
+        .btn-ghost {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
         }
-        
-        .updates {
+
+        .btn-ghost:hover {
+            border-color: var(--text-muted);
+            color: #fff;
+        }
+
+        .results-container {
+            width: 100%;
+            max-width: 850px;
+            margin-top: 40px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            border-left: 3px solid var(--accent);
+            padding-left: 10px;
+            margin-bottom: 15px;
+        }
+
+        .scroll-wrapper {
+            overflow-x: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 600px;
+        }
+
+        th {
             text-align: left;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
         }
 
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
 
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            background: #334155;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 500px) {
+            .actions-row { grid-template-columns: 1fr; }
+            .input-row { flex-direction: column; }
+        }
     </style>
 </head>
-<body {% if theme == 'darkopt' %} class="dark" {% endif %}>
-    <header>
-        <h1>ytdl.lol: Web Media Downloader</h1>
-        <small>just a yt-dlp frontend</small>
-        <br><br>
+<body>
 
-        <p class="message_sv">{{ message }}</p>
+    <header>
+        <h1>ytdl.lol</h1>
+        <div class="subtitle">web content downloader, or just a <a href="https://github.com/yt-dlp/yt-dlp" target="_blank">yt-dlp</a> Frontend</div>
+    </header>
+
+    <main class="main-card">
+        {% if message %}
+            <div class="message_sv">{{ message }}</div>
+        {% endif %}
 
         <form method="POST" action="{% url 'get_info' %}">
             {% csrf_token %}
-            URL: <input type="text" width="90%" name="yt_link" id="yt_link">
-            <button type="button" onclick="pasteFromClipboard()">paste 📝</button>
-            <script>
-                async function pasteFromClipboard() {
-                    try {
-                        const text = await navigator.clipboard.readText();
-                        document.getElementById("yt_link").value = text;
-                    } catch (err) {
-                        alert("Clipboard access denied");
-                    }
-                }
-            </script>
-
-            <br>
+            <div class="input-row">
+                <input type="text" name="yt_link" id="yt_link" placeholder="URL" autocomplete="off">
+                <button type="button" class="btn-ghost" onclick="pasteFromClipboard()">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M19,2H14V4H19V18H5V4H10V2H5A2,2 0 0,0 3,4V18A2,2 0 0,0 5,20H19A2,2 0 0,0 21,18V4A2,2 0 0,0 19,2M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M15,11V13H9V11H15M15,7V9H9V7H15M15,15V17H9V15H15Z"/></svg>
+                    Paste
+                </button>
+            </div>
             
-            <button type="submit" name="action" value="audio">download best audio</button>
-            <button type="submit" name="action" value="video">download best video</button>
-            <button type="submit" name="action" value="info">get format options</button>
+            <div class="actions-row">
+                <button type="submit" name="action" value="audio" class="btn-primary">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55a4 4 0 1 0 4 4V7h4V3h-6z" />
+                    </svg>
+                    Best Audio
+                </button>
+                <button type="submit" name="action" value="video" class="btn-primary">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z"/></svg>
+                    Best Video
+                </button>
+                <button type="submit" name="action" value="info" class="btn-ghost">Pull Download Options</button>
+            </div>
         </form>
-        
-        {% comment %}
-        <form method="POST" action="{% url 'user_def_cookie' %}">
-            {% csrf_token %}
-            theme:
-            <input type="radio" name="coloropt" id="darkopt" value="darkopt">dark
-            <input type="radio" name="coloropt" id="lightopt" value="lightopt">light
-            <button type="submit">save</button>
-        </form>
-        {% endcomment %}
-
-        <!-- <p>You can use the URL:</p>
-        <span class="example_usage">https://zuirx.com/ytdl/https://www.youtube.com/watch?v=oolpPmuK2I8</span> -->
-        
-    </header>
+    </main>
 
     {% if dl_opts %}
-    <h2>Video Options</h2>
-    <table border="1">
-        <tr>
-            <!-- <th>Format ID</th> -->
-            <th>Format</th>
-            <th>Resolution</th>
-            <th>FPS</th>
-            <th>Video Codec</th>
-            <th>Audio Codec</th>
-            <th>Filesize</th>
-            <th>Download</th>
-        </tr>
+    <div class="results-container">
+        <h2>Video Options</h2>
+        <div class="scroll-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ext</th>
+                        <th>Res</th>
+                        <th>FPS</th>
+                        <th>Codec</th>
+                        <th>Size</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for format_id, f in dl_opts.video.items %}
+                    <tr>
+                        <td><span class="badge">{{ f.ext }}</span></td>
+                        <td>{{ f.resolution }}</td>
+                        <td>{{ f.fps }}</td>
+                        <td>{{ f.vcodec|truncatechars:12 }}</td>
+                        <td>{{ f.filesize|default:"?" }}</td>
+                        <td>
+                            <form method="POST" action="/ytdl/dl_from_opt">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="{{ format_id }} - {{ f.url }} - {{ f.ext }}" class="btn-primary" style="padding: 5px 10px; font-size: 0.75rem;">
+                                    Download
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-        {% for format_id, f in dl_opts.video.items %}
-        <form method="POST" action="/ytdl/dl_from_opt" enctype="multipart/form-data">
-            {% csrf_token %}
-            <tr>
-                <!-- <td>{{ format_id }}</td> -->
-                <td>{{ f.ext }}</td>
-                <td>{{ f.resolution }}</td>
-                <td>{{ f.fps }}</td>
-                <td>{{ f.vcodec }}</td>
-                <td>{{ f.acodec }}</td>
-                <td>{{ f.filesize|default:"?" }}</td>
-                <td><button type="submit" name="action" value="{{ format_id }} - {{ f.url }} - {{ f.ext }}">Download</button></td>
-            </tr>
-        </form>
-        {% endfor %}
-    </table>
-    <h2>Audio Options</h2>
-    <table border="1">
-        <tr>
-            <!-- <th>Format ID</th> -->
-            <th>Format</th>
-            <th>Resolution</th>
-            <th>FPS</th>
-            <th>Video Codec</th>
-            <th>Audio Codec</th>
-            <th>Filesize</th>
-            <th>Download</th>
-        </tr>
-
-        {% for format_id, f in dl_opts.audio.items %}
-        <form method="POST" action="/ytdl/dl_from_opt" enctype="multipart/form-data">
-            {% csrf_token %}
-            <tr>
-                <!-- <td>{{ format_id }}</td> -->
-                <td>{{ f.ext }}</td>
-                <td>{{ f.resolution }}</td>
-                <td>{{ f.fps }}</td>
-                <td>{{ f.vcodec }}</td>
-                <td>{{ f.acodec }}</td>
-                <td>{{ f.filesize|default:"?" }}</td>
-                <td><button type="submit" name="action" value="{{ format_id }} - {{ f.url }} - {{ f.ext }}">Download</button></td>
-            </tr>
-        </form>
-        {% endfor %}
-    </table>
+        <h2>Audio Options</h2>
+        <div class="scroll-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ext</th>
+                        <th>A-Codec</th>
+                        <th>Size</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for format_id, f in dl_opts.audio.items %}
+                    <tr>
+                        <td><span class="badge">{{ f.ext }}</span></td>
+                        <td>{{ f.acodec }}</td>
+                        <td>{{ f.filesize|default:"?" }}</td>
+                        <td>
+                            <form method="POST" action="/ytdl/dl_from_opt">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="{{ format_id }} - {{ f.url }} - {{ f.ext }}" class="btn-primary" style="padding: 5px 10px; font-size: 0.75rem;">
+                                    Download
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
     {% endif %}
 
-    
     <footer>
-        <p>by <a href="/">zuirx</a> | <a href="https://github.com/zuirx/ytdldotlol">host your own</a></p>
+        <p>by <a href="https://zuirx.com">zuirx</a> | <a href="https://github.com/zuirx/ytdldotlol">host your own</a></p>
     </footer>
+
+    <script>
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById("yt_link").value = text;
+            } catch (err) {
+                console.error("Paste failed", err);
+            }
+        }
+    </script>
 </body>
 </html>
