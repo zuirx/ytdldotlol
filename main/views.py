@@ -120,8 +120,8 @@ def get_info(request):
 
             for f in info['formats']:
                 format_id = f.get('format_id')
-
                 filenum = f.get('filesize')
+                
                 if filenum:
                     filesize_calc = round(float(f.get('filesize')) / 1024.0 / 1024,2) 
                     filesize_final = f"{filesize_calc} MB"
@@ -157,7 +157,7 @@ def get_info(request):
 
 
 # TODO
-# better frontend
+# show progress on download
 # convert on home page:
 #   select which common type you want (video [good, medium, bad], audio, transcript)
 #   (maybe just get what yt-dlp can detect, then download selected [possibly mix audio/video with ffmpeg])
