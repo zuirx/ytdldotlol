@@ -121,7 +121,7 @@ def get_info(request):
             for f in info['formats']:
                 format_id = f.get('format_id')
                 filenum = f.get('filesize')
-                
+
                 if filenum:
                     filesize_calc = round(float(f.get('filesize')) / 1024.0 / 1024,2) 
                     filesize_final = f"{filesize_calc} MB"
@@ -154,17 +154,3 @@ def get_info(request):
 
         case 'audio':
             return download_yt(subpath=url,type='audio')
-
-
-# TODO
-# show progress on download
-# convert on home page:
-#   select which common type you want (video [good, medium, bad], audio, transcript)
-#   (maybe just get what yt-dlp can detect, then download selected [possibly mix audio/video with ffmpeg])
-#   playlist support
-# add limitations so my server doesnt blow
-# donation page OR single ad
-# updates/about page
-# dark/light theme (cookie)
-# short domain and separate project: ytdl.lol/
-# translation languages
