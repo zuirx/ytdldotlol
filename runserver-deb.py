@@ -11,7 +11,7 @@ except ImportError:
     loop_type = "asyncio"
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "zuirx.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ytdl.settings")
     workers = min(max(multiprocessing.cpu_count(), 2), 8)
 
     log_config = {
